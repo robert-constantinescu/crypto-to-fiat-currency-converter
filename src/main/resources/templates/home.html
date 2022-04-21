@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cryptocurrency Converter</title>
+</head>
+<body>
+
+    <div>
+        <select id="currenciesList">
+            <option value="0">Cryptocurrency</option>
+            <option th:each="crypto : ${cryptocurrencies}" th:value="${crypto.thicker}" th:text="${crypto.thicker + ' - ' + crypto.name}"></option>
+        </select>
+    </div>
+
+
+</body>
+</html>
