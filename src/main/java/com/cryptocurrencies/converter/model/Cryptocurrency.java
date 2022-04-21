@@ -8,6 +8,9 @@ public class Cryptocurrency {
     private String name;
     private BigDecimal valueInUsd;
 
+    public Cryptocurrency() {
+    }
+
     public Cryptocurrency(String thicker, String name) {
         this.thicker = thicker;
         this.name = name;
@@ -35,5 +38,14 @@ public class Cryptocurrency {
 
     public void setValueInUsd(BigDecimal valueInUsd) {
         this.valueInUsd = valueInUsd;
+    }
+
+    @Override
+    public String toString() {
+        return "Cryptocurrency{" +
+                "thicker='" + thicker + '\'' +
+                ", name='" + name + '\'' +
+                ", valueInUsd=" + valueInUsd +
+                '}';
     }
 }
