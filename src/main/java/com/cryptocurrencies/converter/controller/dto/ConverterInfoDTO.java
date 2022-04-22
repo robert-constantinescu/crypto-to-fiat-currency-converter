@@ -5,7 +5,7 @@ public class ConverterInfoDTO {
     private String coinMarketCapId;
     private String ip;
     private String currency;
-    private String valueInCurrency;
+    private Double valueInCurrency;
     private String valueInUsd;
 
     public String getCoinMarketCapId() {
@@ -32,11 +32,11 @@ public class ConverterInfoDTO {
         this.currency = currency;
     }
 
-    public String getValueInCurrency() {
+    public Double getValueInCurrency() {
         return valueInCurrency;
     }
 
-    public void setValueInCurrency(String valueInCurrency) {
+    public void setValueInCurrency(Double valueInCurrency) {
         this.valueInCurrency = valueInCurrency;
     }
 

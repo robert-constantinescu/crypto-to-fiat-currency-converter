@@ -1,6 +1,8 @@
 package com.cryptocurrencies.converter.services;
 
 import com.cryptocurrencies.converter.controller.dto.ConverterInfoDTO;
+import com.cryptocurrencies.converter.controller.dto.PriceDTO;
+import com.cryptocurrencies.converter.controller.dto.QuoteResponseDTO;
 import com.cryptocurrencies.converter.utils.Constants;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +33,9 @@ public class ConverterService {
         String currency = getCurrency(converterInfo.getIp());
         converterInfo.setCurrency(currency);
 
-        String coinValue = coinMarketCapService.getCoinValue(converterInfo);
-        converterInfo.setValueInCurrency(coinValue);
+        QuoteResponseDTO quoteResponse = coinMarketCapService.getCoinValue(converterInfo);
+        PriceDTO price = quoteResponse.getData().getQuote().get("RON");
+        converterInfo.setValueInCurrency(price.getPrice());
 
         return converterInfo;
     }

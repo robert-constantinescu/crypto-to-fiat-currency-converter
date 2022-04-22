@@ -1,21 +1,23 @@
 package com.cryptocurrencies.converter.services;
 
 import com.cryptocurrencies.converter.controller.dto.ConverterInfoDTO;
+import com.cryptocurrencies.converter.controller.dto.QuoteResponseDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.client.utils.URIUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,9 @@ import java.util.List;
 public class CoinMarketCapService {
 
     private static String apiKey = "87785e5f-a340-4ab4-9d34-2465689ed904";
+    final DateFormat dateFormatWithMillis = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    private final ObjectMapper mapper;
+
 
 //    String baseUrl = "https://sandbox-api.coinmarketcap.com";
     String baseUrl = "https://pro-api.coinmarketcap.com";
@@ -32,12 +37,16 @@ public class CoinMarketCapService {
 
     private final RestTemplate restTemplate;
 
-    public CoinMarketCapService(RestTemplateBuilder restTemplateBuilder) {
+    public CoinMarketCapService(ObjectMapper mapper, RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
+        mapper.setDateFormat(dateFormatWithMillis);
+        this.mapper = mapper;
+
+
     }
 
 
-    public String getCoinValue(ConverterInfoDTO converterInfoDTO) throws URISyntaxException, IOException {
+    public QuoteResponseDTO getCoinValue(ConverterInfoDTO converterInfoDTO) throws URISyntaxException, IOException {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
         httpHeaders.add("X-CMC_PRO_API_KEY", apiKey);
@@ -47,7 +56,8 @@ public class CoinMarketCapService {
         List<NameValuePair> queryParameters = new ArrayList<>();
         queryParameters.add(new BasicNameValuePair("amount", "1"));
         queryParameters.add(new BasicNameValuePair("id", converterInfoDTO.getCoinMarketCapId()));
-        queryParameters.add(new BasicNameValuePair("convert", converterInfoDTO.getCurrency()));
+//        String currencies = converterInfoDTO.getCurrency() + ",USD";
+//        queryParameters.add(new BasicNameValuePair("convert", currencies));
 
         String url = baseUrl + quotes;
         URIBuilder query = new URIBuilder(url);
@@ -55,12 +65,12 @@ public class CoinMarketCapService {
 
         URI finalUrl = query.build();
 
-        ResponseEntity<String> exchange = restTemplate.exchange(finalUrl, HttpMethod.GET, entity, String.class);
-        System.out.println(exchange);
+//        ResponseEntity<String> exchange = restTemplate.exchange(finalUrl, HttpMethod.GET, entity, String.class);
+//        System.out.println(exchange);
 
-        Files.writeString(Path.of("/price_response.json"), exchange.getBody());
-
-        return exchange.getBody();
+        byte[] bytes = Files.readAllBytes(Path.of("quotes.json"));
+        QuoteResponseDTO quoteResponseDTO = mapper.readValue(bytes, QuoteResponseDTO.class);
+        return quoteResponseDTO;
     }
 
 

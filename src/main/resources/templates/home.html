@@ -18,14 +18,14 @@
             <div>
                 <h3>Ip</h3>
                 <label>
-                    <input th:text="ip" th:field="*{ip}"/>
+                    <input th:field="*{ip}"/>
                 </label>
             </div>
         </div>
     </form>
     <div>
         <h2> Coin Value </h2>
-        <h3 th:text="${converter.getCurrency() + ' ' + converter.getValueInCurrency()}"></h3>
+        <h3 th:text="${converter.getCurrency() + ' ' + #numbers.formatDecimal(converter.getValueInCurrency(), 0, 'COMMA', 4, 'POINT')}"></h3>
     </div>
 
 

@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 import static com.cryptocurrencies.converter.utils.PagesConstants.PAGE_HOME;
 
@@ -48,7 +49,7 @@ public class ConverterController {
     }
 
     @PostMapping("/")
-    public String convertCrypto(@ModelAttribute("converter") ConverterInfoDTO converterInfo, Model model) throws URISyntaxException, IOException {
+    public String convertCrypto(@ModelAttribute("converter") ConverterInfoDTO converterInfo, Model model, Locale locale) throws URISyntaxException, IOException {
         ConverterInfoDTO convert = converterService.convert(converterInfo);
 
         model.addAttribute("converter", converterInfo);
