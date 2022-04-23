@@ -1,5 +1,6 @@
 package com.cryptocurrencies.converter.services;
 
+import com.cryptocurrencies.converter.config.CoinMarketCapProperties;
 import com.cryptocurrencies.converter.controller.dto.ConverterInfoDTO;
 import com.cryptocurrencies.converter.controller.dto.QuoteResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,23 +26,26 @@ import java.util.List;
 public class CoinMarketCapService {
 
     private final static Logger LOG = LoggerFactory.getLogger(CoinMarketCapService.class);
-    private static final String API_KEY = "87785e5f-a340-4ab4-9d34-2465689ed904";
     private static final String AMOUNT_TO_CONVERT = "1";
 
 //    String URL_BASE = "https://sandbox-api.coinmarketcap.com";
-    private static final String URL_BASE = "https://pro-api.coinmarketcap.com";
 
     private static final String API_ALL_CURRENCIES = "/v1/cryptocurrency/map";
     private static final String API_QUOTES = "/v1/tools/price-conversion";
 
+    private final String baseUrl;
+    private final String apiKey;
     private final RestTemplate restTemplate;
     private final ObjectMapper mapper;
 
-    public CoinMarketCapService(
-            @Qualifier("customMapper") ObjectMapper mapper,
-            RestTemplate restTemplate) {
+    public CoinMarketCapService(CoinMarketCapProperties config,
+                                RestTemplate restTemplate,
+                                @Qualifier("customMapper") ObjectMapper mapper) {
         this.restTemplate = restTemplate;
         this.mapper = mapper;
+
+        this.baseUrl = config.getBaseUrl();
+        this.apiKey = config.getApiKey();
     }
 
 
@@ -50,8 +54,7 @@ public class CoinMarketCapService {
         queryParameters.add(new BasicNameValuePair("amount", AMOUNT_TO_CONVERT));
         queryParameters.add(new BasicNameValuePair("symbol", converterInfoDTO.getCryptoSymbol()));
         queryParameters.add(new BasicNameValuePair("convert", converterInfoDTO.getCurrency()));
-
-        String url = URL_BASE + API_QUOTES;
+        String url = baseUrl + API_QUOTES;
 
         String mockResponse = null;
         QuoteResponseDTO quoteResponseDTO = null;
@@ -59,7 +62,7 @@ public class CoinMarketCapService {
         try {
             mockResponse = Files.readString(Path.of("src/test/java/com/cryptocurrencies/converter/data/quotes.json"));
             quoteResponseDTO = mapper.readValue(mockResponse, QuoteResponseDTO.class);
-//
+
 //            ResponseEntity<String> responseEntity = makeGetCall(url, queryParameters);
 //            quoteResponseDTO = mapper.readValue(responseEntity.getBody(), QuoteResponseDTO.class);
 
@@ -74,7 +77,7 @@ public class CoinMarketCapService {
     private ResponseEntity<String> makeGetCall(String url, List<NameValuePair> parameters) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-        httpHeaders.add("X-CMC_PRO_API_KEY", API_KEY);
+        httpHeaders.add("X-CMC_PRO_API_KEY", apiKey);
 
         HttpEntity entity = new HttpEntity(httpHeaders);
 

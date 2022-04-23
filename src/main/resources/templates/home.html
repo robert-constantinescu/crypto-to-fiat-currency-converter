@@ -6,26 +6,35 @@
 </head>
 <body>
 
+
+    <h1>Cryptocurrency to Fiat currency converter</h1>
+
     <form action="#" th:action="@{/}" th:object="${converter}"  method="post">
         <div>
-            <label for="currenciesList">Select Currency</label>
+            <label for="currenciesList">Select Cryptocurrency</label>
             <select id="currenciesList" onchange="this.form.submit()" th:field="*{cryptoSymbol}" >
-                <option value="">Cryptocurrency</option>
-                <option th:each="crypto : ${cryptocurrencies}" th:value="${crypto.getSymbol()}" th:text="${crypto.getSymbol() + ' - ' + crypto.getName()}"></option>
+                <option value="" disabled selected>Cryptocurrency</option>
+                <option
+                        th:each="crypto : ${cryptocurrencies}"
+                        th:value="${crypto.getSymbol()}"
+                        th:text="${crypto.getSymbol() + ' - ' + crypto.getName()}"></option>
             </select>
             <br />
             <br />
             <div>
-                <h3>Ip</h3>
-                <label>
-                    <input th:field="*{ip}"/>
+<!--                <h3>Ip</h3>-->
+                <label> Provide Ip to convert to local fiat currency
+                    <input th:field="*{ip}" placeholder="ex: 192.168.0.1"/>
                 </label>
             </div>
         </div>
     </form>
+    <hr/>
     <div>
         <h2> Coin Value </h2>
-        <h3 th:text="${converter.getCurrency() + ' ' + #numbers.formatDecimal(converter.getValueInCurrency(), 0, 'COMMA', 4, 'POINT')}"></h3>
+        <span th:if="${converter.getCryptoSymbol() != null &&  converter.getValueInCurrency() != null}">
+            <h3 th:text="1 + ' ' +  ${converter.getCryptoSymbol() + ' = ' + #numbers.formatDecimal(converter.getValueInCurrency(), 0, 'COMMA', 4, 'POINT') + ' ' + converter.getCurrency()}"></h3>
+        </span>
     </div>
 
 

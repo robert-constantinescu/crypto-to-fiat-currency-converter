@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+import static com.cryptocurrencies.converter.utils.PagesConstants.PAGE_ERROR;
 import static com.cryptocurrencies.converter.utils.PagesConstants.PAGE_HOME;
 
 @Controller
@@ -33,18 +34,18 @@ public class ConverterController implements ErrorController {
 
     @RequestMapping(value = "/error")
     public String error() {
-        return "Error handling logic";
+        return PAGE_ERROR;
     }
 
     @GetMapping("/")
     public String homePage(Model model) {
-        model.addAttribute("converter", new ConverterInfoDTO());
+        ConverterInfoDTO converterInfoDTO = new ConverterInfoDTO();
+        model.addAttribute("converter", converterInfoDTO);
         return PAGE_HOME;
     }
 
     @ModelAttribute("cryptocurrencies")
     public Collection<Cryptocurrency> populateCryptocurrencies() throws IOException {
-
 //        if (cryptocurrencyList.isEmpty()) {
 //            cryptocurrencyList = converterService.readCryptocurrenciesFromJsonFile(Path.of("coinmarketcap.json"));
 //        }
@@ -59,7 +60,6 @@ public class ConverterController implements ErrorController {
     @PostMapping("/")
     public String convertCrypto(@ModelAttribute("converter") ConverterInfoDTO converterInfo, Model model, Locale locale) throws URISyntaxException, IOException {
         ConverterInfoDTO infoDTO = converterService.convert(converterInfo);
-
         model.addAttribute("converter", infoDTO);
         return PAGE_HOME;
     }
