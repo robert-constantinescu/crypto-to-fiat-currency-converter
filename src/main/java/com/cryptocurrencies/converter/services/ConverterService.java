@@ -10,10 +10,8 @@ import com.cryptocurrencies.converter.utils.CustomObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -29,19 +27,18 @@ public class ConverterService {
 
     private final static Logger LOG = LoggerFactory.getLogger(ConverterService.class);
 
-    private final RestTemplate restTemplate;
     private final CoinMarketCapService coinMarketCapService;
+    private final CurrencyFromIpService currencyFromIpService;
     private final ObjectMapper mapper;
 
-    public ConverterService(RestTemplateBuilder restTemplateBuilder,
-                            CoinMarketCapService coinMarketCapService,
-                            CustomObjectMapper mapper) {
-        this.restTemplate = restTemplateBuilder.build();
+    public ConverterService(CoinMarketCapService coinMarketCapService,
+                            CurrencyFromIpService currencyFromIpService, CustomObjectMapper mapper) {
         this.coinMarketCapService = coinMarketCapService;
+        this.currencyFromIpService = currencyFromIpService;
         this.mapper = mapper.getCustomMapper();
     }
 
-    public ConverterInfoDTO convert(ConverterInfoDTO converterInfo) throws URISyntaxException, IOException {
+    public ConverterInfoDTO convert(ConverterInfoDTO converterInfo) {
         String currency = getFiatCurrency(converterInfo.getIp());
         converterInfo.setCurrency(currency);
 
@@ -59,23 +56,17 @@ public class ConverterService {
         return response.getData();
     }
 
-    private String getFiatCurrency(String ip) {
+    public String  getFiatCurrency(String ip) {
         String currency = CURRENCY_USD;
         String trimmedIp = ip.trim();
 
         boolean ipIsValid = Constants.PATTERN_VALID_IPV4.matcher(trimmedIp).matches();
         if (ipIsValid) {
-            currency = getFiatCurrencyService(ip);
+            currency = currencyFromIpService.getCurrency(ip);
         }
-
         return currency;
     }
 
-    private String getFiatCurrencyService(String ip) {
-        String url = String.format(URL_CURRENCY_FROM_IP, ip);
-        ResponseEntity<String> response = this.restTemplate.getForEntity(url, String.class);
-        String ipLocalCurrency = response.getBody();
-        return ipLocalCurrency;
-    }
+
 
 }

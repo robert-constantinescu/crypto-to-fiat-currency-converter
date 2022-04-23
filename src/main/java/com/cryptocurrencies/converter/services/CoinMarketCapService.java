@@ -38,13 +38,13 @@ public class CoinMarketCapService {
     private final RestTemplate restTemplate;
     private final ObjectMapper mapper;
 
-    public CoinMarketCapService(CustomObjectMapper mapper, RestTemplateBuilder restTemplateBuilder) {
-        this.restTemplate = restTemplateBuilder.build();
+    public CoinMarketCapService(CustomObjectMapper mapper, RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
         this.mapper = mapper.getCustomMapper();
     }
 
 
-    public QuoteResponseDTO getCoinValue(ConverterInfoDTO converterInfoDTO) throws URISyntaxException, IOException {
+    public QuoteResponseDTO getCoinValue(ConverterInfoDTO converterInfoDTO) {
         List<NameValuePair> queryParameters = new ArrayList<>();
         queryParameters.add(new BasicNameValuePair("amount", "1"));
         queryParameters.add(new BasicNameValuePair("symbol", converterInfoDTO.getCryptoSymbol()));
@@ -55,8 +55,14 @@ public class CoinMarketCapService {
 //        ResponseEntity<String> responseEntity = makeGetCall(url, queryParameters);
 //        QuoteResponseDTO quoteResponseDTO = mapper.readValue(responseEntity.getBody(), QuoteResponseDTO.class);
 //
-        String mockResponse = Files.readString(Path.of("quotes.json"));
-        QuoteResponseDTO quoteResponseDTO = mapper.readValue(mockResponse, QuoteResponseDTO.class);
+        String mockResponse = null;
+        QuoteResponseDTO quoteResponseDTO = null;
+        try {
+            mockResponse = Files.readString(Path.of("quotes.json"));
+            quoteResponseDTO = mapper.readValue(mockResponse, QuoteResponseDTO.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return quoteResponseDTO;
     }
