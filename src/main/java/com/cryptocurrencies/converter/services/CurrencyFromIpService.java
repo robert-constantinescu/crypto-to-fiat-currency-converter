@@ -21,8 +21,7 @@ public class CurrencyFromIpService {
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         String ipLocalCurrency = response.getBody();
 
-        assert ipLocalCurrency != null;
-        if ("Undefined".matches(ipLocalCurrency)) {
+        if (ipLocalCurrency == null || "Undefined".matches(ipLocalCurrency)) {
             ipLocalCurrency = CURRENCY_USD;
         }
 

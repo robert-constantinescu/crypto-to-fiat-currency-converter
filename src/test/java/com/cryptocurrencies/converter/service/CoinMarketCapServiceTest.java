@@ -1,27 +1,20 @@
 package com.cryptocurrencies.converter.service;
 
-import com.cryptocurrencies.converter.CryptoConverterApplication;
 import com.cryptocurrencies.converter.controller.dto.ConverterInfoDTO;
 import com.cryptocurrencies.converter.controller.dto.DataDTO;
 import com.cryptocurrencies.converter.controller.dto.PriceDTO;
 import com.cryptocurrencies.converter.controller.dto.QuoteResponseDTO;
 import com.cryptocurrencies.converter.services.CoinMarketCapService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.*;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -32,7 +25,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.cryptocurrencies.converter.utils.Constants.CURRENCY_USD;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith({MockitoExtension.class})

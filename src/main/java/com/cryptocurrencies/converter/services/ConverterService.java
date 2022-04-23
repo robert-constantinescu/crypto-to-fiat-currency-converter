@@ -55,8 +55,12 @@ public class ConverterService {
 
     public String  getFiatCurrency(String ip) {
         String currency = CURRENCY_USD;
-        String trimmedIp = ip.trim();
 
+        if (ip == null) {
+            return currency;
+        }
+
+        String trimmedIp = ip.trim();
         boolean ipIsValid = Constants.PATTERN_VALID_IPV4.matcher(trimmedIp).matches();
         if (ipIsValid) {
             currency = currencyFromIpService.getCurrency(ip);
