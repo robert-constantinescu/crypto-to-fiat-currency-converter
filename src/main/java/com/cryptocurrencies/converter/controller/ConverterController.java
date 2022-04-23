@@ -1,20 +1,19 @@
 package com.cryptocurrencies.converter.controller;
 
 
-import com.cryptocurrencies.converter.controller.dto.CoinMarketCapCryptocurrenciesResponse;
 import com.cryptocurrencies.converter.controller.dto.ConverterInfoDTO;
 import com.cryptocurrencies.converter.model.Cryptocurrency;
 import com.cryptocurrencies.converter.services.ConverterService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
@@ -23,13 +22,18 @@ import java.util.Locale;
 import static com.cryptocurrencies.converter.utils.PagesConstants.PAGE_HOME;
 
 @Controller
-public class ConverterController {
+public class ConverterController implements ErrorController {
 
     private static List<Cryptocurrency> cryptocurrencyList = List.of();
     private final ConverterService converterService;
 
     public ConverterController(ConverterService converterService) {
         this.converterService = converterService;
+    }
+
+    @RequestMapping(value = "/error")
+    public String error() {
+        return "Error handling logic";
     }
 
     @GetMapping("/")
@@ -42,7 +46,7 @@ public class ConverterController {
     public Collection<Cryptocurrency> populateCryptocurrencies() throws IOException {
 
         if (cryptocurrencyList.isEmpty()) {
-            cryptocurrencyList = readCryptocurrenciesFromJsonFile(Path.of("coinmarketcap.json"));
+            cryptocurrencyList = converterService.readCryptocurrenciesFromJsonFile(Path.of("coinmarketcap.json"));
         }
 
         return cryptocurrencyList;
@@ -55,17 +59,6 @@ public class ConverterController {
         model.addAttribute("converter", converterInfo);
         return PAGE_HOME;
     }
-
-
-    private List<Cryptocurrency> readCryptocurrenciesFromJsonFile(Path jsonPath) throws IOException {
-
-        byte[] bytes = Files.readAllBytes(jsonPath);
-        ObjectMapper mapper = new ObjectMapper();
-        CoinMarketCapCryptocurrenciesResponse response = mapper.readValue(bytes, CoinMarketCapCryptocurrenciesResponse.class);
-
-        return response.getData();
-    }
-
 
 
 }
