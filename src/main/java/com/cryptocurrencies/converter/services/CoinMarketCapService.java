@@ -2,13 +2,13 @@ package com.cryptocurrencies.converter.services;
 
 import com.cryptocurrencies.converter.controller.dto.ConverterInfoDTO;
 import com.cryptocurrencies.converter.controller.dto.QuoteResponseDTO;
-import com.cryptocurrencies.converter.utils.CustomObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -25,42 +25,46 @@ import java.util.List;
 public class CoinMarketCapService {
 
     private final static Logger LOG = LoggerFactory.getLogger(CoinMarketCapService.class);
-    private static String API_KEY = "87785e5f-a340-4ab4-9d34-2465689ed904";
+    private static final String API_KEY = "87785e5f-a340-4ab4-9d34-2465689ed904";
+    private static final String AMOUNT_TO_CONVERT = "1";
 
 //    String URL_BASE = "https://sandbox-api.coinmarketcap.com";
-    private final String URL_BASE = "https://pro-api.coinmarketcap.com";
+    private static final String URL_BASE = "https://pro-api.coinmarketcap.com";
 
-    private final String API_ALL_CURRENCIES = "/v1/cryptocurrency/map";
-    private final String API_QUOTES = "/v1/tools/price-conversion";
-
+    private static final String API_ALL_CURRENCIES = "/v1/cryptocurrency/map";
+    private static final String API_QUOTES = "/v1/tools/price-conversion";
 
     private final RestTemplate restTemplate;
     private final ObjectMapper mapper;
 
-    public CoinMarketCapService(CustomObjectMapper mapper, RestTemplate restTemplate) {
+    public CoinMarketCapService(
+            @Qualifier("customMapper") ObjectMapper mapper,
+            RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        this.mapper = mapper.getCustomMapper();
+        this.mapper = mapper;
     }
 
 
     public QuoteResponseDTO getCoinValue(ConverterInfoDTO converterInfoDTO) {
         List<NameValuePair> queryParameters = new ArrayList<>();
-        queryParameters.add(new BasicNameValuePair("amount", "1"));
+        queryParameters.add(new BasicNameValuePair("amount", AMOUNT_TO_CONVERT));
         queryParameters.add(new BasicNameValuePair("symbol", converterInfoDTO.getCryptoSymbol()));
         queryParameters.add(new BasicNameValuePair("convert", converterInfoDTO.getCurrency()));
 
         String url = URL_BASE + API_QUOTES;
 
-//        ResponseEntity<String> responseEntity = makeGetCall(url, queryParameters);
-//        QuoteResponseDTO quoteResponseDTO = mapper.readValue(responseEntity.getBody(), QuoteResponseDTO.class);
-//
         String mockResponse = null;
         QuoteResponseDTO quoteResponseDTO = null;
+
         try {
-            mockResponse = Files.readString(Path.of("quotes.json"));
-            quoteResponseDTO = mapper.readValue(mockResponse, QuoteResponseDTO.class);
-        } catch (IOException e) {
-            e.printStackTrace();
+//            mockResponse = Files.readString(Path.of("src/test/java/com/cryptocurrencies/converter/data/quotes.json"));
+//            quoteResponseDTO = mapper.readValue(mockResponse, QuoteResponseDTO.class);
+
+            ResponseEntity<String> responseEntity = makeGetCall(url, queryParameters);
+            quoteResponseDTO = mapper.readValue(responseEntity.getBody(), QuoteResponseDTO.class);
+
+        } catch (IOException ex) {
+            LOG.error(ex.getMessage());
         }
 
         return quoteResponseDTO;

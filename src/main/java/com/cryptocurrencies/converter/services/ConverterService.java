@@ -6,7 +6,6 @@ import com.cryptocurrencies.converter.controller.dto.PriceDTO;
 import com.cryptocurrencies.converter.controller.dto.QuoteResponseDTO;
 import com.cryptocurrencies.converter.model.Cryptocurrency;
 import com.cryptocurrencies.converter.utils.Constants;
-import com.cryptocurrencies.converter.utils.CustomObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,10 +28,11 @@ public class ConverterService {
     private final ObjectMapper mapper;
 
     public ConverterService(CoinMarketCapService coinMarketCapService,
-                            CurrencyFromIpService currencyFromIpService, CustomObjectMapper mapper) {
+                            CurrencyFromIpService currencyFromIpService,
+                            ObjectMapper mapper) {
         this.coinMarketCapService = coinMarketCapService;
         this.currencyFromIpService = currencyFromIpService;
-        this.mapper = mapper.getCustomMapper();
+        this.mapper = mapper;
     }
 
     public ConverterInfoDTO convert(ConverterInfoDTO converterInfo) {

@@ -7,7 +7,6 @@ import com.cryptocurrencies.converter.controller.dto.QuoteResponseDTO;
 import com.cryptocurrencies.converter.services.CoinMarketCapService;
 import com.cryptocurrencies.converter.services.ConverterService;
 import com.cryptocurrencies.converter.services.CurrencyFromIpService;
-import com.cryptocurrencies.converter.utils.CustomObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,9 +33,6 @@ public class ConverterServiceTest {
 
     @Mock
     private CoinMarketCapService coinMarketCapService;
-
-    @Mock
-    private CustomObjectMapper mapper;
 
 
     @Test
