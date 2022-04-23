@@ -5,6 +5,7 @@ import com.cryptocurrencies.converter.controller.dto.ConverterInfoDTO;
 import com.cryptocurrencies.converter.controller.dto.PriceDTO;
 import com.cryptocurrencies.converter.controller.dto.QuoteResponseDTO;
 import com.cryptocurrencies.converter.model.Cryptocurrency;
+import com.cryptocurrencies.converter.repository.CryptocurrencyRepository;
 import com.cryptocurrencies.converter.utils.Constants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.cryptocurrencies.converter.utils.Constants.CURRENCY_USD;
 
@@ -25,13 +28,14 @@ public class ConverterService {
 
     private final CoinMarketCapService coinMarketCapService;
     private final CurrencyFromIpService currencyFromIpService;
+    private final CryptocurrencyRepository cryptocurrencyRepository;
     private final ObjectMapper mapper;
 
-    public ConverterService(CoinMarketCapService coinMarketCapService,
-                            CurrencyFromIpService currencyFromIpService,
-                            ObjectMapper mapper) {
+    public ConverterService(CoinMarketCapService coinMarketCapService, CurrencyFromIpService currencyFromIpService,
+                            CryptocurrencyRepository cryptocurrencyRepository, ObjectMapper mapper) {
         this.coinMarketCapService = coinMarketCapService;
         this.currencyFromIpService = currencyFromIpService;
+        this.cryptocurrencyRepository = cryptocurrencyRepository;
         this.mapper = mapper;
     }
 
@@ -49,8 +53,18 @@ public class ConverterService {
     public List<Cryptocurrency> readCryptocurrenciesFromJsonFile(Path jsonPath) throws IOException {
         byte[] bytes = Files.readAllBytes(jsonPath);
         CoinMarketCapCryptocurrenciesResponse response = mapper.readValue(bytes, CoinMarketCapCryptocurrenciesResponse.class);
-
+//        cryptocurrencyRepository.saveAll(response.getData());
         return response.getData();
+    }
+
+    public List<Cryptocurrency> getAllCryptocurrenciesSortedBySymbol() {
+        List<Cryptocurrency> all = cryptocurrencyRepository.findAll();
+
+        List<Cryptocurrency> sortedCrypto = all.stream()
+                .sorted(Comparator.comparing(Cryptocurrency::getSymbol))
+                .collect(Collectors.toList());
+
+        return sortedCrypto;
     }
 
     public String  getFiatCurrency(String ip) {

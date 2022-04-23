@@ -45,8 +45,12 @@ public class ConverterController implements ErrorController {
     @ModelAttribute("cryptocurrencies")
     public Collection<Cryptocurrency> populateCryptocurrencies() throws IOException {
 
+//        if (cryptocurrencyList.isEmpty()) {
+//            cryptocurrencyList = converterService.readCryptocurrenciesFromJsonFile(Path.of("coinmarketcap.json"));
+//        }
+
         if (cryptocurrencyList.isEmpty()) {
-            cryptocurrencyList = converterService.readCryptocurrenciesFromJsonFile(Path.of("coinmarketcap.json"));
+            cryptocurrencyList = converterService.getAllCryptocurrenciesSortedBySymbol();
         }
 
         return cryptocurrencyList;

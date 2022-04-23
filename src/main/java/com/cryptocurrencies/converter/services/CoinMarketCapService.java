@@ -57,11 +57,11 @@ public class CoinMarketCapService {
         QuoteResponseDTO quoteResponseDTO = null;
 
         try {
-//            mockResponse = Files.readString(Path.of("src/test/java/com/cryptocurrencies/converter/data/quotes.json"));
-//            quoteResponseDTO = mapper.readValue(mockResponse, QuoteResponseDTO.class);
-
-            ResponseEntity<String> responseEntity = makeGetCall(url, queryParameters);
-            quoteResponseDTO = mapper.readValue(responseEntity.getBody(), QuoteResponseDTO.class);
+            mockResponse = Files.readString(Path.of("src/test/java/com/cryptocurrencies/converter/data/quotes.json"));
+            quoteResponseDTO = mapper.readValue(mockResponse, QuoteResponseDTO.class);
+//
+//            ResponseEntity<String> responseEntity = makeGetCall(url, queryParameters);
+//            quoteResponseDTO = mapper.readValue(responseEntity.getBody(), QuoteResponseDTO.class);
 
         } catch (IOException ex) {
             LOG.error(ex.getMessage());

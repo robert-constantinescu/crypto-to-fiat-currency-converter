@@ -2,17 +2,17 @@ package com.cryptocurrencies.converter.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(value={ "id" }, ignoreUnknown = true)
+
 @Entity
 public class Cryptocurrency {
 
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long pk_id;
 
     @Column
     private String symbol;
@@ -62,11 +62,11 @@ public class Cryptocurrency {
     }
 
     public Long getId() {
-        return id;
+        return pk_id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.pk_id = id;
     }
 
     public String getSlug() {
@@ -89,7 +89,7 @@ public class Cryptocurrency {
     @Override
     public String toString() {
         return "Cryptocurrency{" +
-                "id=" + id +
+                "id=" + pk_id +
                 ", symbol='" + symbol + '\'' +
                 ", name='" + name + '\'' +
                 ", slug='" + slug + '\'' +
