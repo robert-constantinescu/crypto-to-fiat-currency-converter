@@ -10,17 +10,14 @@ import com.cryptocurrencies.converter.utils.CustomObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
 import static com.cryptocurrencies.converter.utils.Constants.CURRENCY_USD;
-import static com.cryptocurrencies.converter.utils.Constants.URL_CURRENCY_FROM_IP;
 
 @Service
 public class ConverterService {
