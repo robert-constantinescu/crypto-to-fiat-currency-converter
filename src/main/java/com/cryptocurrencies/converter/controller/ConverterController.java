@@ -54,11 +54,10 @@ public class ConverterController implements ErrorController {
 
     @PostMapping("/")
     public String convertCrypto(@ModelAttribute("converter") ConverterInfoDTO converterInfo, Model model, Locale locale) throws URISyntaxException, IOException {
-        ConverterInfoDTO convert = converterService.convert(converterInfo);
+        ConverterInfoDTO infoDTO = converterService.convert(converterInfo);
 
-        model.addAttribute("converter", converterInfo);
+        model.addAttribute("converter", infoDTO);
         return PAGE_HOME;
     }
-
 
 }

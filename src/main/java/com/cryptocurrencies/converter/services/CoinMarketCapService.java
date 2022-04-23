@@ -47,14 +47,14 @@ public class CoinMarketCapService {
     public QuoteResponseDTO getCoinValue(ConverterInfoDTO converterInfoDTO) throws URISyntaxException, IOException {
         List<NameValuePair> queryParameters = new ArrayList<>();
         queryParameters.add(new BasicNameValuePair("amount", "1"));
-        queryParameters.add(new BasicNameValuePair("id", converterInfoDTO.getCoinMarketCapId()));
+        queryParameters.add(new BasicNameValuePair("symbol", converterInfoDTO.getCryptoSymbol()));
         queryParameters.add(new BasicNameValuePair("convert", converterInfoDTO.getCurrency()));
 
         String url = URL_BASE + API_QUOTES;
 
 //        ResponseEntity<String> responseEntity = makeGetCall(url, queryParameters);
 //        QuoteResponseDTO quoteResponseDTO = mapper.readValue(responseEntity.getBody(), QuoteResponseDTO.class);
-
+//
         String mockResponse = Files.readString(Path.of("quotes.json"));
         QuoteResponseDTO quoteResponseDTO = mapper.readValue(mockResponse, QuoteResponseDTO.class);
 

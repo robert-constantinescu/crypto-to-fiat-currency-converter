@@ -9,9 +9,9 @@
     <form action="#" th:action="@{/}" th:object="${converter}"  method="post">
         <div>
             <label for="currenciesList">Select Currency</label>
-            <select id="currenciesList" onchange="this.form.submit()" th:field="*{coinMarketCapId}" >
+            <select id="currenciesList" onchange="this.form.submit()" th:field="*{cryptoSymbol}" >
                 <option value="">Cryptocurrency</option>
-                <option th:each="crypto : ${cryptocurrencies}" th:value="${crypto.getId()}" th:text="${crypto.getSymbol() + ' - ' + crypto.getName()}"></option>
+                <option th:each="crypto : ${cryptocurrencies}" th:value="${crypto.getSymbol()}" th:text="${crypto.getSymbol() + ' - ' + crypto.getName()}"></option>
             </select>
             <br />
             <br />

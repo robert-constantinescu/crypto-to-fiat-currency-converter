@@ -2,18 +2,18 @@ package com.cryptocurrencies.converter.controller.dto;
 
 public class ConverterInfoDTO {
 
-    private String coinMarketCapId;
+    private String cryptoSymbol;
     private String ip;
     private String currency;
     private Double valueInCurrency;
     private String valueInUsd;
 
-    public String getCoinMarketCapId() {
-        return coinMarketCapId;
+    public String getCryptoSymbol() {
+        return cryptoSymbol;
     }
 
-    public void setCoinMarketCapId(String coinMarketCapId) {
-        this.coinMarketCapId = coinMarketCapId;
+    public void setCryptoSymbol(String cryptoSymbol) {
+        this.cryptoSymbol = cryptoSymbol;
     }
 
     public String getIp() {
@@ -51,7 +51,7 @@ public class ConverterInfoDTO {
     @Override
     public String toString() {
         return "{" +
-                "valueInUsd='" + coinMarketCapId + '\'' +
+                "valueInUsd='" + cryptoSymbol + '\'' +
                 ", ip='" + ip + '\'' +
                 ", objectClass='" + this.getClass().getSimpleName() + '\'' +
                 "}";

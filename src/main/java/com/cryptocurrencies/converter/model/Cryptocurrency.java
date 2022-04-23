@@ -2,16 +2,31 @@ package com.cryptocurrencies.converter.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Entity
 public class Cryptocurrency {
 
+    @Id
     private Long id;
+
+    @Column
     private String symbol;
+
+    @Column
     private String name;
+
+    @Column
     private String slug;
+
+    @Column
     private Long rank;
+
+    @Column(name = "value_in_usd")
     private BigDecimal valueInUsd;
 
     public Cryptocurrency() {
