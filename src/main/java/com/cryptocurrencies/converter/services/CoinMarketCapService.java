@@ -17,8 +17,6 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,18 +51,18 @@ public class CoinMarketCapService {
         List<NameValuePair> queryParameters = new ArrayList<>();
         queryParameters.add(new BasicNameValuePair("amount", AMOUNT_TO_CONVERT));
         queryParameters.add(new BasicNameValuePair("symbol", converterInfoDTO.getCryptoSymbol()));
-        queryParameters.add(new BasicNameValuePair("convert", converterInfoDTO.getCurrency()));
+        queryParameters.add(new BasicNameValuePair("convert", converterInfoDTO.getFiatCurrency()));
         String url = baseUrl + API_QUOTES;
 
         String mockResponse = null;
         QuoteResponseDTO quoteResponseDTO = null;
 
         try {
-            mockResponse = Files.readString(Path.of("src/test/java/com/cryptocurrencies/converter/data/quotes.json"));
-            quoteResponseDTO = mapper.readValue(mockResponse, QuoteResponseDTO.class);
+//            mockResponse = Files.readString(Path.of("src/test/java/com/cryptocurrencies/converter/data/quotes.json"));
+//            quoteResponseDTO = mapper.readValue(mockResponse, QuoteResponseDTO.class);
 
-//            ResponseEntity<String> responseEntity = makeGetCall(url, queryParameters);
-//            quoteResponseDTO = mapper.readValue(responseEntity.getBody(), QuoteResponseDTO.class);
+            ResponseEntity<String> responseEntity = makeGetCall(url, queryParameters);
+            quoteResponseDTO = mapper.readValue(responseEntity.getBody(), QuoteResponseDTO.class);
 
         } catch (IOException ex) {
             LOG.error(ex.getMessage());

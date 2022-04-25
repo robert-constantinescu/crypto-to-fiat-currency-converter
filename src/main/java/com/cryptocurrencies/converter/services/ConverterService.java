@@ -1,12 +1,8 @@
 package com.cryptocurrencies.converter.services;
 
-import com.cryptocurrencies.converter.controller.dto.CoinMarketCapCryptocurrenciesResponse;
-import com.cryptocurrencies.converter.controller.dto.ConverterInfoDTO;
-import com.cryptocurrencies.converter.controller.dto.PriceDTO;
-import com.cryptocurrencies.converter.controller.dto.QuoteResponseDTO;
+import com.cryptocurrencies.converter.controller.dto.*;
 import com.cryptocurrencies.converter.model.Cryptocurrency;
 import com.cryptocurrencies.converter.repository.CryptocurrencyRepository;
-import com.cryptocurrencies.converter.utils.Constants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +12,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.Currency;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
-
-import static com.cryptocurrencies.converter.utils.Constants.CURRENCY_USD;
 
 @Service
 public class ConverterService {
@@ -27,34 +23,32 @@ public class ConverterService {
     private final static Logger LOG = LoggerFactory.getLogger(ConverterService.class);
 
     private final CoinMarketCapService coinMarketCapService;
-    private final CurrencyFromIpService currencyFromIpService;
+    private final IpInfoService ipInfoService;
     private final CryptocurrencyRepository cryptocurrencyRepository;
     private final ObjectMapper mapper;
 
-    public ConverterService(CoinMarketCapService coinMarketCapService, CurrencyFromIpService currencyFromIpService,
+    public ConverterService(CoinMarketCapService coinMarketCapService, IpInfoService ipInfoService,
                             CryptocurrencyRepository cryptocurrencyRepository, ObjectMapper mapper) {
         this.coinMarketCapService = coinMarketCapService;
-        this.currencyFromIpService = currencyFromIpService;
+        this.ipInfoService = ipInfoService;
         this.cryptocurrencyRepository = cryptocurrencyRepository;
         this.mapper = mapper;
     }
 
     public ConverterInfoDTO convert(ConverterInfoDTO converterInfo) {
-        String currency = getFiatCurrency(converterInfo.getIp());
-        converterInfo.setCurrency(currency);
+        IpInfoDTO infoForIp = ipInfoService.getInfoForIp(converterInfo.getIp());
+
+        Locale ipLocale = Locale.forLanguageTag(infoForIp.getLanguageAndCountry());
+        converterInfo.setIpLocale(ipLocale);
+
+        String localCurrencyCode = Currency.getInstance(ipLocale).getCurrencyCode();
+        converterInfo.setFiatCurrency(localCurrencyCode);
 
         QuoteResponseDTO quoteResponse = coinMarketCapService.getCoinValue(converterInfo);
-        PriceDTO priceDTO = quoteResponse.getData().getQuote().get(currency);
-        converterInfo.setValueInCurrency(priceDTO.getPrice());
+        PriceDTO priceDTO = quoteResponse.getData().getQuote().get(converterInfo.getFiatCurrency());
+        converterInfo.setValueInFiatCurrency(priceDTO.getPrice());
 
         return converterInfo;
-    }
-
-    public List<Cryptocurrency> readCryptocurrenciesFromJsonFile(Path jsonPath) throws IOException {
-        byte[] bytes = Files.readAllBytes(jsonPath);
-        CoinMarketCapCryptocurrenciesResponse response = mapper.readValue(bytes, CoinMarketCapCryptocurrenciesResponse.class);
-//        cryptocurrencyRepository.saveAll(response.getData());
-        return response.getData();
     }
 
     public List<Cryptocurrency> getAllCryptocurrenciesSortedBySymbol() {
@@ -67,21 +61,12 @@ public class ConverterService {
         return sortedCrypto;
     }
 
-    public String  getFiatCurrency(String ip) {
-        String currency = CURRENCY_USD;
 
-        if (ip == null) {
-            return currency;
-        }
-
-        String trimmedIp = ip.trim();
-        boolean ipIsValid = Constants.PATTERN_VALID_IPV4.matcher(trimmedIp).matches();
-        if (ipIsValid) {
-            currency = currencyFromIpService.getCurrency(ip);
-        }
-        return currency;
+    //not used anymore, let it here in case i want to read again the json file with all currencies
+    private List<Cryptocurrency> readCryptocurrenciesFromJsonFile(Path jsonPath) throws IOException {
+        byte[] bytes = Files.readAllBytes(jsonPath);
+        CoinMarketCapCryptocurrenciesResponse response = mapper.readValue(bytes, CoinMarketCapCryptocurrenciesResponse.class);
+//        cryptocurrencyRepository.saveAll(response.getData());
+        return response.getData();
     }
-
-
-
 }

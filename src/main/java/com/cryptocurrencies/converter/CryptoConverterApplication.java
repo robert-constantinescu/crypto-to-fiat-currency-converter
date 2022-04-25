@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.client.RestTemplate;
 
-import static com.cryptocurrencies.converter.utils.Constants.DATE_FORMAT_WITH_MILLIS;
+import java.text.SimpleDateFormat;
 
 @SpringBootApplication
 public class CryptoConverterApplication {
@@ -26,9 +26,10 @@ public class CryptoConverterApplication {
     @Bean
     @Primary
     public ObjectMapper customMapper() {
+        SimpleDateFormat dateFormatWithMillis = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
         ObjectMapper mapper = Jackson2ObjectMapperBuilder
                 .json()
-                .dateFormat(DATE_FORMAT_WITH_MILLIS)
+                .dateFormat(dateFormatWithMillis)
                 .build();
         return mapper;
     }

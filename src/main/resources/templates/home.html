@@ -32,11 +32,10 @@
     <hr/>
     <div>
         <h2> Coin Value </h2>
-        <span th:if="${converter.getCryptoSymbol() != null &&  converter.getValueInCurrency() != null}">
-            <h3 th:text="1 + ' ' +  ${converter.getCryptoSymbol() + ' = ' + #numbers.formatDecimal(converter.getValueInCurrency(), 0, 'COMMA', 4, 'POINT') + ' ' + converter.getCurrency()}"></h3>
+        <span th:if="${converter.getCryptoSymbol() != null &&  converter.getValueInFiatCurrency() != null}">
+            <h3 th:text="1 + ' ' +  ${converter.getCryptoSymbol() + ' = ' + converter.displayFiatCurrencyValueInLocalFormat()}"></h3>
         </span>
     </div>
-
 
 </body>
 </html>

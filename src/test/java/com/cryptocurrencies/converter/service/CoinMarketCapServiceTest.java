@@ -37,14 +37,14 @@ public class CoinMarketCapServiceTest {
     private CoinMarketCapService coinMarketCapService;
 
     @MockBean
-    private RestTemplate restTemplate;
+    private RestTemplate restTemplate; //this is mocked to not trigger the API each time due to cost reasons
 
 
     @Test
     void shouldConnectToCoinMarketCapApiAndGetFiatValue() throws IOException {
         ConverterInfoDTO converterInfoDTO = new ConverterInfoDTO();
         converterInfoDTO.setCryptoSymbol("BTC");
-        converterInfoDTO.setCurrency(CURRENCY_USD);
+        converterInfoDTO.setFiatCurrency(CURRENCY_USD);
 
         String body = Files.readString(Path.of("src/test/java/com/cryptocurrencies/converter/data/quotes.json"));
         Mockito

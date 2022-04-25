@@ -1,12 +1,10 @@
 package com.cryptocurrencies.converter.service;
 
-import com.cryptocurrencies.converter.controller.dto.ConverterInfoDTO;
-import com.cryptocurrencies.converter.controller.dto.DataDTO;
-import com.cryptocurrencies.converter.controller.dto.PriceDTO;
-import com.cryptocurrencies.converter.controller.dto.QuoteResponseDTO;
+import com.cryptocurrencies.converter.controller.dto.*;
+import com.cryptocurrencies.converter.repository.CryptocurrencyRepository;
 import com.cryptocurrencies.converter.services.CoinMarketCapService;
 import com.cryptocurrencies.converter.services.ConverterService;
-import com.cryptocurrencies.converter.services.CurrencyFromIpService;
+import com.cryptocurrencies.converter.services.IpInfoService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.cryptocurrencies.converter.utils.Constants.CURRENCY_USD;
+import static com.cryptocurrencies.converter.utils.Constants.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 
@@ -29,10 +27,13 @@ public class ConverterServiceTest {
     private ConverterService converterService;
 
     @Mock
-    private CurrencyFromIpService currencyFromIpService;
+    private IpInfoService ipInfoService;
 
     @Mock
     private CoinMarketCapService coinMarketCapService;
+
+    @Mock
+    private CryptocurrencyRepository cryptocurrencyRepository;
 
 
     @Test
@@ -57,32 +58,24 @@ public class ConverterServiceTest {
         converterInfoDTO.setCryptoSymbol("ADA");
         converterInfoDTO.setIp(ip);
 
-        Mockito.when(currencyFromIpService.getCurrency(ip)).thenReturn(CURRENCY_USD);
+        IpInfoDTO mockIpInfoDto = new IpInfoDTO();
+        mockIpInfoDto.setLanguages(LANGUAGE_ENGLISH);
+        mockIpInfoDto.setCountry(COUNTRY_UNITED_STATES);
+
+        Mockito.when(ipInfoService.getInfoForIp(ip)).thenReturn(mockIpInfoDto);
         Mockito.when(coinMarketCapService.getCoinValue(converterInfoDTO)).thenReturn(quoteResponseDTO);
 
         converterService.convert(converterInfoDTO);
-        Mockito.verify(currencyFromIpService, times(1)).getCurrency(any());
+
+
+        Mockito.verify(ipInfoService, times(1)).getInfoForIp(any());
         Mockito.verify(coinMarketCapService, times(1)).getCoinValue(any());
 
-        Assertions.assertEquals(CURRENCY_USD, converterInfoDTO.getCurrency());
-        Assertions.assertEquals(mockPrice, converterInfoDTO.getValueInCurrency());
+        Assertions.assertEquals(CURRENCY_USD, converterInfoDTO.getFiatCurrency());
+        Assertions.assertEquals(mockPrice, converterInfoDTO.getValueInFiatCurrency());
     }
 
+    void shouldGetAllCurrenciesFromRepository() {
 
-    @Test
-    void shouldReturnUsdIfIpIsInvalid() {
-        String ip = "168.0.1";
-        String fiatCurrency = converterService.getFiatCurrency(ip);
-        Assertions.assertEquals("USD", fiatCurrency);
     }
-
-    @Test
-    void shouldGetIpFromServiceIfIpIsValid() {
-        String ip = "192.168.0.1";
-        String fiatCurrency = converterService.getFiatCurrency(ip);
-
-        Mockito.verify(currencyFromIpService, times(1)).getCurrency(any());
-    }
-
-
 }

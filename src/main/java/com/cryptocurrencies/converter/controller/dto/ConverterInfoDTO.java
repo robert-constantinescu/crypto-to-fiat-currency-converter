@@ -1,12 +1,15 @@
 package com.cryptocurrencies.converter.controller.dto;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class ConverterInfoDTO {
 
     private String cryptoSymbol;
     private String ip;
-    private String currency;
-    private Double valueInCurrency;
-    private String valueInUsd;
+    private String fiatCurrency;
+    private Double valueInFiatCurrency;
+    private Locale ipLocale;
 
     public String getCryptoSymbol() {
         return cryptoSymbol;
@@ -24,36 +27,34 @@ public class ConverterInfoDTO {
         this.ip = ip;
     }
 
-    public String getCurrency() {
-        return currency;
+    public String getFiatCurrency() {
+        return fiatCurrency;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
+    public void setFiatCurrency(String fiatCurrency) {
+        this.fiatCurrency = fiatCurrency;
     }
 
-    public Double getValueInCurrency() {
-        return valueInCurrency;
+    public Double getValueInFiatCurrency() {
+        return valueInFiatCurrency;
     }
 
-    public void setValueInCurrency(Double valueInCurrency) {
-        this.valueInCurrency = valueInCurrency;
+    public void setValueInFiatCurrency(Double valueInFiatCurrency) {
+        this.valueInFiatCurrency = valueInFiatCurrency;
     }
 
-    public String getValueInUsd() {
-        return valueInUsd;
+    public Locale getIpLocale() {
+        return ipLocale;
     }
 
-    public void setValueInUsd(String valueInUsd) {
-        this.valueInUsd = valueInUsd;
+    public void setIpLocale(Locale ipLocale) {
+        this.ipLocale = ipLocale;
     }
 
-    @Override
-    public String toString() {
-        return "{" +
-                "valueInUsd='" + cryptoSymbol + '\'' +
-                ", ip='" + ip + '\'' +
-                ", objectClass='" + this.getClass().getSimpleName() + '\'' +
-                "}";
+    public String displayFiatCurrencyValueInLocalFormat() {
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(this.ipLocale);
+        String formattedValue = formatter.format(this.valueInFiatCurrency);
+
+        return formattedValue;
     }
 }
