@@ -42,9 +42,8 @@ public class ConverterService {
 
         Locale ipLocale = Locale.forLanguageTag(infoForIp.getLanguageAndCountry());
         converterInfo.setIpLocale(ipLocale);
-
-        String localCurrencyCode = Currency.getInstance(ipLocale).getCurrencyCode();
-        converterInfo.setFiatCurrency(localCurrencyCode);
+//        String localCurrencyCode = Currency.getInstance(ipLocale).getCurrencyCode();
+        converterInfo.setFiatCurrency(infoForIp.getCurrency());
 
         QuoteResponseDTO quoteResponse = coinMarketCapService.getCoinValue(converterInfo);
         PriceDTO priceDTO = quoteResponse.getData().getQuote().get(converterInfo.getFiatCurrency());

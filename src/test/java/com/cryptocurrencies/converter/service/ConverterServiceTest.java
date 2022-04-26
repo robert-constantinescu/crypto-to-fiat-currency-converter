@@ -61,6 +61,7 @@ public class ConverterServiceTest {
         IpInfoDTO mockIpInfoDto = new IpInfoDTO();
         mockIpInfoDto.setLanguages(LANGUAGE_ENGLISH);
         mockIpInfoDto.setCountry(COUNTRY_UNITED_STATES);
+        mockIpInfoDto.setCurrency(CURRENCY_USD);
 
         Mockito.when(ipInfoService.getInfoForIp(ip)).thenReturn(mockIpInfoDto);
         Mockito.when(coinMarketCapService.getCoinValue(converterInfoDTO)).thenReturn(quoteResponseDTO);
