@@ -8,6 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,11 +54,17 @@ public class ConverterService {
         return converterInfo;
     }
 
-    public List<Cryptocurrency> getAllCryptocurrenciesSortedBySymbol() {
+    public List<Cryptocurrency> getAllCryptocurrenciesSortedByRank() {
         List<Cryptocurrency> all = cryptocurrencyRepository.findAll();
 
+        if (all.size() == 0) {
+            //backup, in case from some reason the DB can't be read
+            LOG.warn("Couldn't retrieve data from H2 DB. Reading from the Json file");
+            all = readCryptocurrenciesFromJsonFile(Path.of("coinmarketcap.json"));
+        }
+
         List<Cryptocurrency> sortedCrypto = all.stream()
-                .sorted(Comparator.comparing(Cryptocurrency::getSymbol))
+                .sorted(Comparator.comparing(Cryptocurrency::getRank))
                 .collect(Collectors.toList());
 
         return sortedCrypto;
@@ -63,10 +72,16 @@ public class ConverterService {
 
 
     //not used anymore, let it here in case i want to read again the json file with all currencies
-    private List<Cryptocurrency> readCryptocurrenciesFromJsonFile(Path jsonPath) throws IOException {
-        byte[] bytes = Files.readAllBytes(jsonPath);
-        CoinMarketCapCryptocurrenciesResponse response = mapper.readValue(bytes, CoinMarketCapCryptocurrenciesResponse.class);
-//        cryptocurrencyRepository.saveAll(response.getData());
-        return response.getData();
+    private List<Cryptocurrency> readCryptocurrenciesFromJsonFile(Path jsonPath) {
+        List<Cryptocurrency> allCryptos = List.of();
+        try {
+            byte[] bytes = Files.readAllBytes(jsonPath);
+            CoinMarketCapCryptocurrenciesResponse response = mapper.readValue(bytes, CoinMarketCapCryptocurrenciesResponse.class);
+            allCryptos = response.getData();
+        } catch (IOException e) {
+            LOG.error("Couldn't read the Crypto files. Reason: {}", e.getMessage());
+        }
+//        cryptocurrencyRepository.saveAll(allCryptos);
+        return allCryptos;
     }
 }

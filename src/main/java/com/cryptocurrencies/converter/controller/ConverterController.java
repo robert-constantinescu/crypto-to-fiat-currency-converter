@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -51,7 +50,7 @@ public class ConverterController implements ErrorController {
 //        }
 
         if (cryptocurrencyList.isEmpty()) {
-            cryptocurrencyList = converterService.getAllCryptocurrenciesSortedBySymbol();
+            cryptocurrencyList = converterService.getAllCryptocurrenciesSortedByRank();
         }
 
         return cryptocurrencyList;
