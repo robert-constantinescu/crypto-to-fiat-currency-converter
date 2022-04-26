@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.Objects;
 
 import static com.cryptocurrencies.converter.utils.PagesConstants.PAGE_ERROR;
 import static com.cryptocurrencies.converter.utils.PagesConstants.PAGE_HOME;
@@ -24,7 +22,6 @@ import static com.cryptocurrencies.converter.utils.PagesConstants.PAGE_HOME;
 @Controller
 public class ConverterController implements ErrorController {
 
-    private static List<Cryptocurrency> cryptocurrencyList = List.of();
     private final ConverterService converterService;
 
     public ConverterController(ConverterService converterService) {
@@ -44,20 +41,16 @@ public class ConverterController implements ErrorController {
     }
 
     @ModelAttribute("cryptocurrencies")
-    public Collection<Cryptocurrency> populateCryptocurrencies() throws IOException {
-//        if (cryptocurrencyList.isEmpty()) {
-//            cryptocurrencyList = converterService.readCryptocurrenciesFromJsonFile(Path.of("coinmarketcap.json"));
-//        }
-
-        if (cryptocurrencyList.isEmpty()) {
-            cryptocurrencyList = converterService.getAllCryptocurrenciesSortedByRank();
-        }
-
-        return cryptocurrencyList;
+    public Collection<Cryptocurrency> populateCryptocurrencies() {
+        return converterService.getAllCryptocurrenciesSortedByRank();
     }
 
     @PostMapping("/")
-    public String convertCrypto(@ModelAttribute("converter") ConverterInfoDTO converterInfo, Model model, Locale locale) throws URISyntaxException, IOException {
+    public String convertCrypto(@ModelAttribute("converter") ConverterInfoDTO converterInfo, Model model, HttpServletRequest request)  {
+        String requestIp = request.getRemoteAddr();
+        if (Objects.equals(converterInfo.getIp(), "")) {
+            converterInfo.setIp(requestIp);
+        }
         ConverterInfoDTO infoDTO = converterService.convert(converterInfo);
         model.addAttribute("converter", infoDTO);
         return PAGE_HOME;

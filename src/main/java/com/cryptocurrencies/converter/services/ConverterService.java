@@ -8,9 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,6 +21,8 @@ import java.util.stream.Collectors;
 public class ConverterService {
 
     private final static Logger LOG = LoggerFactory.getLogger(ConverterService.class);
+
+    private static List<Cryptocurrency> cryptocurrencyList = List.of();
 
     private final CoinMarketCapService coinMarketCapService;
     private final IpInfoService ipInfoService;
@@ -55,6 +54,10 @@ public class ConverterService {
     }
 
     public List<Cryptocurrency> getAllCryptocurrenciesSortedByRank() {
+        if ( !cryptocurrencyList.isEmpty()) {
+            return cryptocurrencyList;
+        }
+
         List<Cryptocurrency> all = cryptocurrencyRepository.findAll();
 
         if (all.size() == 0) {
@@ -63,11 +66,11 @@ public class ConverterService {
             all = readCryptocurrenciesFromJsonFile(Path.of("coinmarketcap.json"));
         }
 
-        List<Cryptocurrency> sortedCrypto = all.stream()
+        cryptocurrencyList = all.stream()
                 .sorted(Comparator.comparing(Cryptocurrency::getRank))
                 .collect(Collectors.toList());
 
-        return sortedCrypto;
+        return cryptocurrencyList;
     }
 
 

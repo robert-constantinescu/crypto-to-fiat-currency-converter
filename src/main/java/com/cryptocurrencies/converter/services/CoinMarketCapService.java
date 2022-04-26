@@ -63,7 +63,7 @@ public class CoinMarketCapService {
 
             ResponseEntity<String> responseEntity = makeGetCall(url, queryParameters);
             quoteResponseDTO = mapper.readValue(responseEntity.getBody(), QuoteResponseDTO.class);
-
+            LOG.info("Retrieved quote from CoinMarketCap API");
         } catch (IOException ex) {
             LOG.error(ex.getMessage());
         }

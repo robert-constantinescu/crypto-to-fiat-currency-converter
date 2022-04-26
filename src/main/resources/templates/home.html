@@ -31,6 +31,13 @@
     </form>
     <hr/>
     <div>
+        <div>
+            <span th:if="${converter.getErrorMessage() != null}">
+                <h4 th:text="'Could not get price for selected value due to: ' + ${converter.getErrorMessage()}"></h4>
+                <h4>Displaying value in default fiat currency</h4>
+            </span>
+        </div>
+        <br />
         <h2> Coin Value </h2>
         <span th:if="${converter.getCryptoSymbol() != null &&  converter.getValueInFiatCurrency() != null}">
             <h3 th:text="1 + ' ' +  ${converter.getCryptoSymbol() + ' = ' + converter.displayFiatCurrencyValueInLocalFormat()}"></h3>

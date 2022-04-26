@@ -46,6 +46,16 @@ II - Classic
 
 
 Notes & Limitations
+* The IP used to get the Fiat Currency for the conversion is:
+  * the provided one, if there was one provided
+    * however, if this IP is not valid, it will get the value in USD
+  * the one from the request
+    * however, if the application will only run locally, the local IP are reserved ones
+    * the IP service will not be able to find a currency for a local IP, and that's why the application will display the value in USD
+* TL;DR: The fallback case when the Locale for the IP can't be retrieved from the API, is to display the Cryptocurrency Value in USD
+
+
+* The application only supports IPv4 for the moment
 * In a real environment, the Api Key from the properties would probably be retrieved from some sort of a Credential Manager or in a secure manner, and not saved in plain text in the properties file
 * The API used are from a free account and have about 300 calls daily available.
 * The DB would also be password protected and encrypted

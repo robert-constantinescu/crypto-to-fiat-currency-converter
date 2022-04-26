@@ -2,6 +2,8 @@ package com.cryptocurrencies.converter.services;
 
 import com.cryptocurrencies.converter.controller.dto.IpInfoDTO;
 import com.cryptocurrencies.converter.utils.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,7 @@ import static com.cryptocurrencies.converter.utils.Constants.*;
 
 @Service
 public class IpInfoService {
-
+    private final static Logger LOG = LoggerFactory.getLogger(IpInfoService.class);
     private IpInfoDTO defaultInfoDto;
 
     private final RestTemplate restTemplate;
@@ -31,7 +33,7 @@ public class IpInfoService {
         if (ipInfoDTO.hasError()) {
             return getDefaultIpInfoDto();
         }
-
+        LOG.info("Trying to retrieve information for following parameters: {}", ipInfoDTO);
         return ipInfoDTO;
     }
 

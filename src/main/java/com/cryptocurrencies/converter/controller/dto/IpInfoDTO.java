@@ -58,4 +58,13 @@ public class IpInfoDTO {
         return languageWithCountry;
     }
 
+    @Override
+    public String toString() {
+        return "IpInfoDTO{" +
+                "country='" + country + '\'' +
+                ", languages='" + languages + '\'' +
+                ", currency='" + currency + '\'' +
+                ", error=" + error +
+                '}';
+    }
 }

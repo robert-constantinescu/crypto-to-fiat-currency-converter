@@ -10,6 +10,7 @@ public class ConverterInfoDTO {
     private String fiatCurrency;
     private Double valueInFiatCurrency;
     private Locale ipLocale;
+    private String errorMessage;
 
     public String getCryptoSymbol() {
         return cryptoSymbol;
@@ -49,6 +50,14 @@ public class ConverterInfoDTO {
 
     public void setIpLocale(Locale ipLocale) {
         this.ipLocale = ipLocale;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     public String displayFiatCurrencyValueInLocalFormat() {

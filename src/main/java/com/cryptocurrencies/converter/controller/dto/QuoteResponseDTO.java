@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class QuoteResponseDTO {
 
     private DataDTO data;
+    private StatusDTO status;
 
     public DataDTO getData() {
         return data;
@@ -14,5 +15,13 @@ public class QuoteResponseDTO {
 
     public void setData(DataDTO data) {
         this.data = data;
+    }
+
+    public StatusDTO getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusDTO status) {
+        this.status = status;
     }
 }
