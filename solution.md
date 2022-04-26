@@ -30,13 +30,19 @@ I -  Intellij
 3. Import the project in Intellij
 4. Go and run: `src/main/java/com/cryptocurrencies/converter/CryptoConverterApplication.java`
 
+Extra Steps:
+5. It is possible you may need to manually add framework support
+   1. In the `Project tree`: richt click on the project
+   2. Click on `Add Framework Support`
+   3. Add framework support for `Maven`
+   4. You will also need to `Trust the project` before trying to run the application
 
 II - Classic
 1. Clone the repository
 2. Checkout `feature/implementing_converter`
-3. Execute `mvn clean package` in the folder location
-4. Go to `${project_directory}/target`
-5. execute: `java -jar converter-0.0.1-SNAPSHOT.jar`
+3. It is important to run the below steps from the `${project_directory}`
+4. Execute `mvn clean package` in the folder location
+5. execute: `java -jar target\converter-0.0.1-SNAPSHOT.jar`
 
 
 Notes & Limitations
