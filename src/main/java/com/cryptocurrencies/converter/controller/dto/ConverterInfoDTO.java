@@ -62,6 +62,9 @@ public class ConverterInfoDTO {
 
     public String displayFiatCurrencyValueInLocalFormat() {
         NumberFormat formatter = NumberFormat.getCurrencyInstance(this.ipLocale);
+        if (this.valueInFiatCurrency < 1) {
+            formatter.setMinimumFractionDigits(8);
+        }
         String formattedValue = formatter.format(this.valueInFiatCurrency);
 
         return formattedValue;
