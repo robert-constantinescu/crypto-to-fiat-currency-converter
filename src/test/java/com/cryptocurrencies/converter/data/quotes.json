@@ -1,0 +1,23 @@
+{
+  "status": {
+    "timestamp": "2022-04-22T19:59:28.576Z",
+    "error_code": 0,
+    "error_message": null,
+    "elapsed": 35,
+    "credit_count": 1,
+    "notice": null
+  },
+  "data": {
+    "id": 1,
+    "symbol": "BTC",
+    "name": "Bitcoin",
+    "amount": 1,
+    "last_updated": "2022-04-22T19:59:00.000Z",
+    "quote": {
+      "USD": {
+        "price": 181084.3532891763,
+        "last_updated": "2022-04-22T19:59:20.000Z"
+      }
+    }
+  }
+}
