@@ -68,6 +68,7 @@ public class IpInfoService {
         defaultIpInfoDto.setCountry(COUNTRY_UNITED_STATES);
         defaultIpInfoDto.setLanguages(LANGUAGE_ENGLISH);
         defaultIpInfoDto.setCurrency(CURRENCY_USD);
+        defaultIpInfoDto.setErrorMessage("Provided IP is Invalid");
         this.defaultInfoDto = defaultIpInfoDto;
 
         return this.defaultInfoDto;

@@ -11,6 +11,8 @@ public class IpInfoDTO {
     private String currency;
     private boolean error = false;
 
+    private String errorMessage;
+
     public String getCountry() {
         return country;
     }
@@ -45,6 +47,14 @@ public class IpInfoDTO {
 
     public void setError(boolean error) {
         this.error = error;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     public String getLanguageAndCountry(){
